@@ -11,8 +11,9 @@ import net.java.games.input.Version;
 public class ControllerTest
 {
 
-        static int ID = 8;
-    
+        private static float Y1Value;
+        private static float Y2Value;
+        
 	static Controller[] ca = ControllerEnvironment.getDefaultEnvironment().getControllers();
         static String controllerType = "Stick";
         static Controller logitech = null;
@@ -64,30 +65,27 @@ public class ControllerTest
             while(true) {
                 logitech.poll();
                 Component[] components = logitech.getComponents();
-                StringBuffer buffer = new StringBuffer();
+                
                 for(int i=0;i<components.length;i++) {
-                    if(i>0) {
-                    buffer.append(", ");
+                    
+                    if(components[i].getName().equals("Z Rotation"))
+                    {
+                        Y2Value = components[i].getPollData();
                     }
-                buffer.append(components[i].getName());
-                buffer.append(": ");
-                if(components[i].isAnalog()) {
-                    buffer.append(components[i].getPollData());
-                } else {
-                    if(components[i].getPollData()==1.0f) {
-                        buffer.append("On");
-                    } else {
-                        buffer.append("Off");
+                    if(components[i].getName().equals("Y Axis"))
+                    {
+                        Y1Value = components[i].getPollData();
                     }
+                }   
+                
+                String output = "Y2: " + Y2Value + " Y1: " + Y1Value;
+                System.out.println(output);
+            
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-            }
-            System.out.println(buffer.toString());
-
-            try {
-                Thread.sleep(20);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             }
     }
 }
